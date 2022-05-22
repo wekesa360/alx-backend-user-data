@@ -20,6 +20,32 @@ def not_found(error) -> str:
     """
     return jsonify({"error": "Not found"}), 404
 
+@app.errorhandler(401)
+def unauthorized(error) -> str:
+    """ unauthorized handler
+    """
+    return jsonify({"error": "Unauthorized"}), 401
+
+@app.handler(403)
+def forbidden(error) -> str:
+    """ forbidden handler
+    """
+    return jsonify({"error": "Forbidden"}), 403
+
+@app.before_Request
+def do_before_request() -> str:
+    """function  executed before request of all methods
+    """
+    if auth is None:
+        return
+    given = ['/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/']
+    if not auth.require_auth(request.path, given):
+        return
+    if auth.authorization_header(request) is None:
+        abort(401)
+    if auth.current_user(request) is None:
+        abort(403)
+
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
