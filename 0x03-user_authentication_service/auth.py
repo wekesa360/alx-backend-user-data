@@ -101,7 +101,7 @@ class Auth:
         except (KeyError, ValueError):
             return None
         
-    def get_Reset_password_Token(self, email: str) -> str:
+    def get_Reset_password_token(self, email: str) -> str:
         """
         get_reset_password_token - function to generate new uuid
         Arguments:
